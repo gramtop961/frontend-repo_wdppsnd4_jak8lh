@@ -3,13 +3,13 @@
 > vite
 
 
-  VITE v5.4.20  ready in 560 ms
+  VITE v5.4.20  ready in 373 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: http://172.20.6.245:3000/
-12:15:52 PM [vite] Pre-transform error: Transform failed with 1 error:
+12:18:57 PM [vite] Pre-transform error: Transform failed with 1 error:
 /home/workspace/src/components/EventTimeline.jsx:82:44: ERROR: Expected ">" but found "["
-12:15:56 PM [vite] Internal server error: Transform failed with 1 error:
+12:18:59 PM [vite] Internal server error: Transform failed with 1 error:
 /home/workspace/src/components/EventTimeline.jsx:82:44: ERROR: Expected ">" but found "["
   Plugin: vite:esbuild
   File: /home/workspace/src/components/EventTimeline.jsx:82:44

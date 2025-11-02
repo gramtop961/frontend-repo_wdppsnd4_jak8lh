@@ -23,7 +23,7 @@ export default function About() {
             of problem solving.
           </p>
           <a
-            href="https://chat.whatsapp.com" // Replace with actual community link
+            href="https://chat.whatsapp.com"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-medium text-white/90 backdrop-blur-md transition-colors hover:border-white/25 hover:bg-white/10"
