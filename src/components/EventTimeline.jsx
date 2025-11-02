@@ -1,102 +1,190 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Laptop, School } from 'lucide-react';
+import { useMemo, useRef } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
+import {
+  Mic,
+  Laptop,
+  Coffee,
+  Users,
+  Moon,
+  Sun,
+  Presentation,
+  Award,
+  Timer,
+  Rocket
+} from 'lucide-react';
 
-const stages = [
-  {
-    title: 'Round 1 – Idea Submission',
-    mode: 'Online',
-    icon: Laptop,
-    period: 'Oct 20 – Oct 30, 2025',
-    desc: 'Submit a concise concept note, problem statement, and solution approach. Judged on clarity, feasibility, and impact.'
-  },
-  {
-    title: 'Result Declaration',
-    mode: 'Online',
-    icon: Laptop,
-    period: 'Nov 2, 2025',
-    desc: 'Shortlisted teams announced. Onboarding and theme deep-dives shared with finalists.'
-  },
-  {
-    title: 'Final 24-hour Hackathon',
-    mode: 'Hybrid',
-    icon: School,
-    period: 'Nov 9 – Nov 10, 2025',
-    desc: 'Build, iterate and present. Attend workshops, get mentored, and demo to jury. Both online and on-campus tracks available.'
-  }
+const neonLine = 'from-[#00FFC6] to-[#8A2BE2]';
+
+const day1 = [
+  { time: '9:00 AM – 10:00 AM', title: 'Registrations', desc: 'Teams check in and settle down before the event begins.', icon: Timer },
+  { time: '10:00 AM – 11:00 AM', title: 'Inauguration Ceremony', desc: 'Opening remarks by faculty and organizers. Rules, judging criteria, and timelines announced.', icon: Mic },
+  { time: '11:00 AM – 1:00 PM', title: 'Hackathon Kickoff!', desc: 'Teams start working on their projects based on the given problem statements.', icon: Rocket },
+  { time: '1:00 PM – 2:00 PM', title: 'Lunch Break', desc: 'Fuel up and recharge for the build.', icon: Coffee },
+  { time: '2:00 PM – 7:00 PM', title: 'Development Phase – Round 1', desc: 'Teams continue building their projects. Mentors available for guidance. (Elimination round may occur towards the end.)', icon: Laptop },
+  { time: '7:00 PM – 8:00 PM', title: 'Dinner Break', desc: 'Grab dinner and take a breather.', icon: Coffee },
+  { time: '8:00 PM – 9:30 PM', title: 'Fun Activities & Team Engagement', desc: 'Relaxation & creativity sessions for the top 10 teams.', icon: Users },
+  { time: '9:30 PM – 2:00 AM', title: 'Night Development Phase', desc: 'Teams resume coding with mentor assistance.', icon: Moon },
+  { time: '2:00 AM – 3:00 AM', title: 'Midnight Mentor Round', desc: 'Mentors visit teams, review progress, and provide feedback.', icon: Users }
 ];
 
-export default function EventTimeline() {
-  const [active, setActive] = useState(null);
+const day2 = [
+  { time: '3:00 AM – 6:00 AM', title: 'Final Development Sprint', desc: 'Teams polish and finalize their projects.', icon: Laptop },
+  { time: '6:00 AM – 7:00 AM', title: 'Mentor Interaction & Preliminary Evaluation', desc: 'Last checks with mentors and early scoring.', icon: Users },
+  { time: '7:00 AM – 8:00 AM', title: 'Breakfast & Refresh Break', desc: 'Light breakfast to power the final push.', icon: Sun },
+  { time: '8:00 AM – 9:30 AM', title: 'Final Presentations', desc: 'Top teams present their solutions before the judging panel.', icon: Presentation },
+  { time: '9:30 AM – 10:30 AM', title: 'Closing & Award Ceremony', desc: 'Results announced, winners felicitated, and event concludes.', icon: Award }
+];
 
-  const ActiveIcon = active !== null ? stages[active]?.icon : null;
+function FloatingMath() {
+  const items = useMemo(
+    () => [
+      { char: 'π', x: '10%', delay: 0 },
+      { char: '∑', x: '30%', delay: 0.15 },
+      { char: '√', x: '55%', delay: 0.3 },
+      { char: '∞', x: '75%', delay: 0.45 }
+    ],
+    []
+  );
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {items.map((it, i) => (
+        <motion.span
+          key={i}
+          initial={{ y: 40, opacity: 0 }}
+          animate={{ y: -40, opacity: 0.6 }}
+          transition={{ duration: 6, repeat: Infinity, repeatType: 'reverse', delay: it.delay, ease: 'easeInOut' }}
+          className="absolute text-6xl font-semibold text-white/5 select-none"
+          style={{ left: it.x, top: `${15 + i * 18}%` }}
+        >
+          {it.char}
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
+function TimelineCard({ i, time, title, desc, Icon }) {
+  const fromLeft = i % 2 === 0;
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: fromLeft ? -32 : 32 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+      className={`relative w-full sm:w-[calc(50%-1.25rem)] ${fromLeft ? 'self-start sm:mr-auto' : 'self-end sm:ml-auto'}`}
+    >
+      <div className="group relative rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_40px_rgba(0,255,198,0.07)]">
+        <div className="absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-r from-[#00FFC6]/10 via-transparent to-[#8A2BE2]/10" />
+        <div className="relative flex items-start gap-3">
+          <div className="mt-1 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#00FFC6]/20 to-[#8A2BE2]/20 text-[#00FFC6] ring-1 ring-white/10">
+            <Icon className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="text-xs uppercase tracking-wide text-white/60">{time}</div>
+            <div className="mt-1 text-lg font-semibold text-white">{title}</div>
+            <p className="mt-1 text-sm text-white/75">{desc}</p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function EventTimeline() {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const progressX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.2 });
 
   return (
-    <section id="timeline" className="relative w-full bg-[#0A0A0A] py-20 text-[#EAEAEA]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(138,43,226,0.12),transparent_50%)]" />
-      <div className="relative mx-auto max-w-7xl px-6">
-        <h2 className="mb-8 text-3xl font-bold sm:text-4xl">Event Flow</h2>
+    <section ref={sectionRef} id="timeline" className="relative w-full bg-[#0A0A0A] py-24 text-[#EAEAEA]">
+      {/* Neon radial glow background */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(0,255,198,0.15),transparent_70%)]" />
+      <FloatingMath />
 
-        <div className="no-scrollbar relative -mx-6 overflow-x-auto px-6">
-          <div className="flex min-w-full gap-6">
-            {stages.map((s, idx) => (
-              <motion.button
-                key={s.title}
-                onClick={() => setActive(idx)}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
-                className="group relative min-w-[260px] rounded-2xl border border-white/10 bg-white/5 p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_0_40px_rgba(0,255,198,0.07)] backdrop-blur-md focus:outline-none"
-              >
-                <div className="mb-3 flex items-center gap-2 text-[#00FFC6]">
-                  <s.icon className="h-5 w-5" />
-                  <span className="text-xs uppercase tracking-wide text-white/70">{s.mode}</span>
-                </div>
-                <div className="text-lg font-semibold">{s.title}</div>
-                <div className="mt-1 text-sm text-white/70">{s.period}</div>
-                <div className="pointer-events-none absolute -bottom-4 left-1/2 h-2 w-[140%] -translate-x-1/2 bg-gradient-to-r from-[#00FFC6]/0 via-[#00FFC6]/30 to-[#8A2BE2]/0 blur-md" />
-              </motion.button>
-            ))}
-          </div>
-          <div className="mt-6 h-[2px] w-full bg-gradient-to-r from-[#00FFC6]/20 via-white/10 to-[#8A2BE2]/20" />
+      {/* Scroll progress bar */}
+      <div className="sticky top-0 z-20 mx-auto w-full max-w-7xl px-6">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-white/10 backdrop-blur-sm">
+          <motion.div style={{ scaleX: progressX }} className={`origin-left h-full bg-gradient-to-r ${neonLine} shadow-[0_0_20px_rgba(0,255,198,0.5)]`} />
+        </div>
+      </div>
+
+      <div className="relative mx-auto mt-10 max-w-7xl px-6">
+        <div className="mb-14 space-y-2">
+          <h2 className="text-center text-3xl font-bold sm:text-4xl">Event Flow</h2>
+          <p className="text-center text-white/70">A 24-hour neon journey from ideation to celebration</p>
         </div>
 
-        <AnimatePresence>
-          {active !== null && (
-            <motion.div
-              key="modal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-              onClick={() => setActive(null)}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 12 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-                className="max-w-lg rounded-2xl border border-white/10 bg-[#0B0B0B] p-6 text-white shadow-2xl backdrop-blur-xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="mb-2 flex items-center gap-2 text-[#00FFC6]">
-                  {ActiveIcon && <ActiveIcon className="h-5 w-5" />}
-                  <span className="text-xs uppercase tracking-wide text-white/70">{stages[active]?.mode}</span>
+        {/* Day 1 */}
+        <div className="relative">
+          <h3 className="mb-10 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#00FFC6]/15 to-[#8A2BE2]/15 px-5 py-2 text-lg font-semibold text-white ring-1 ring-white/10">
+            <span className="inline-block h-2 w-2 rounded-full bg-[#00FFC6] shadow-[0_0_12px_#00FFC6]" /> Day 1
+          </h3>
+
+          {/* Vertical neon line */}
+          <div className="absolute left-1/2 top-0 hidden h-full -translate-x-1/2 sm:block">
+            <div className={`h-full w-[3px] rounded-full bg-gradient-to-b ${neonLine}`} />
+          </div>
+
+          <div className="relative grid grid-cols-1 gap-6 sm:gap-8">
+            {day1.map((ev, i) => (
+              <div key={ev.title} className="relative flex flex-col sm:grid sm:grid-cols-2 sm:items-center">
+                {/* connector dot for large screens */}
+                <div className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">
+                  <div className="h-3 w-3 rounded-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
                 </div>
-                <div className="text-xl font-semibold">{stages[active]?.title}</div>
-                <div className="mt-1 text-sm text-white/70">{stages[active]?.period}</div>
-                <p className="mt-4 text-white/85">{stages[active]?.desc}</p>
-                <button
-                  onClick={() => setActive(null)}
-                  className="mt-6 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/80 hover:border-white/25 hover:bg-white/10"
-                >
-                  Close
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {i % 2 === 0 ? (
+                  <TimelineCard i={i} {...ev} Icon={ev.icon} />
+                ) : (
+                  <div />
+                )}
+                {i % 2 === 1 ? <TimelineCard i={i} {...ev} Icon={ev.icon} /> : <div />}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Day 2 */}
+        <div className="relative mt-20">
+          <h3 className="mb-10 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#00FFC6]/15 to-[#8A2BE2]/15 px-5 py-2 text-lg font-semibold text-white ring-1 ring-white/10">
+            <span className="inline-block h-2 w-2 rounded-full bg-[#8A2BE2] shadow-[0_0_12px_#8A2BE2]" /> Day 2
+          </h3>
+
+          <div className="absolute left-1/2 top-0 hidden h-full -translate-x-1/2 sm:block">
+            <div className={`h-full w-[3px] rounded-full bg-gradient-to-b ${neonLine}`} />
+          </div>
+
+          <div className="relative grid grid-cols-1 gap-6 sm:gap-8">
+            {day2.map((ev, i) => (
+              <div key={ev.title} className="relative flex flex-col sm:grid sm:grid-cols-2 sm:items-center">
+                <div className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">
+                  <div className="h-3 w-3 rounded-full bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
+                </div>
+                {i % 2 === 0 ? (
+                  <TimelineCard i={i} {...ev} Icon={ev.icon} />
+                ) : (
+                  <div />
+                )}
+                {i % 2 === 1 ? <TimelineCard i={i} {...ev} Icon={ev.icon} /> : <div />}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Completion banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+          className="relative mt-20 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-md"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#00FFC6]/10 via-transparent to-[#8A2BE2]/10" />
+          <div className="relative">
+            <p className="text-sm uppercase tracking-wider text-white/60">You reached the end of the journey</p>
+            <h4 className="mt-2 text-2xl font-bold">🎉 Hackathon Completed</h4>
+            <p className="mt-1 text-white/75">Thanks for building with us. See you at Math‑E‑Thon 3.0!</p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
