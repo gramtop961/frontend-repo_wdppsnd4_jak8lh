@@ -2,14 +2,20 @@ import Hero from './components/Hero';
 import About from './components/About';
 import ThemesGrid from './components/ThemesGrid';
 import EventTimeline from './components/EventTimeline';
+import RulesGuidelines from './components/RulesGuidelines';
+import PrizesRewards from './components/PrizesRewards';
+import ContactOrganizers from './components/ContactOrganizers';
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#EAEAEA]">
+    <div className="min-h-screen scroll-smooth bg-[#0A0A0A] text-[#EAEAEA]">
       <Hero />
       <About />
       <ThemesGrid />
       <EventTimeline />
+      <RulesGuidelines />
+      <PrizesRewards />
+      <ContactOrganizers />
 
       <footer className="relative w-full border-t border-white/10 bg-[#0A0A0A] py-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,198,0.08),transparent_55%)]" />
@@ -18,8 +24,9 @@ function App() {
             Built with ❤️ by Infinity – The Mathematics Society, GTBIT
           </div>
           <div className="flex items-center gap-4 text-sm text-white/70">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-[#00FFC6]">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#8A2BE2]">LinkedIn</a>
+            <a href="#rules" className="hover:text-[#00FFC6]">Rules</a>
+            <a href="#prizes" className="hover:text-[#8A2BE2]">Prizes</a>
+            <a href="#contact" className="hover:text-[#00FFC6]">Contact</a>
           </div>
         </div>
       </footer>
