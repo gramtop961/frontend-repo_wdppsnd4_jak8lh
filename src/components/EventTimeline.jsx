@@ -29,6 +29,8 @@ const stages = [
 export default function EventTimeline() {
   const [active, setActive] = useState(null);
 
+  const ActiveIcon = active !== null ? stages[active]?.icon : null;
+
   return (
     <section id="timeline" className="relative w-full bg-[#0A0A0A] py-20 text-[#EAEAEA]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(138,43,226,0.12),transparent_50%)]" />
@@ -79,7 +81,7 @@ export default function EventTimeline() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="mb-2 flex items-center gap-2 text-[#00FFC6]">
-                  {stages[active] && <stages[active].icon className="h-5 w-5" />}
+                  {ActiveIcon && <ActiveIcon className="h-5 w-5" />}
                   <span className="text-xs uppercase tracking-wide text-white/70">{stages[active]?.mode}</span>
                 </div>
                 <div className="text-xl font-semibold">{stages[active]?.title}</div>

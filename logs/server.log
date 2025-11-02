@@ -3,32 +3,7 @@
 > vite
 
 
-  VITE v5.4.20  ready in 373 ms
+  VITE v5.4.20  ready in 383 ms
 
   ➜  Local:   http://localhost:3000/
   ➜  Network: http://172.20.6.245:3000/
-12:18:57 PM [vite] Pre-transform error: Transform failed with 1 error:
-/home/workspace/src/components/EventTimeline.jsx:82:44: ERROR: Expected ">" but found "["
-12:18:59 PM [vite] Internal server error: Transform failed with 1 error:
-/home/workspace/src/components/EventTimeline.jsx:82:44: ERROR: Expected ">" but found "["
-  Plugin: vite:esbuild
-  File: /home/workspace/src/components/EventTimeline.jsx:82:44
-  
-  Expected ">" but found "["
-  80 |                >
-  81 |                  <div className="mb-2 flex items-center gap-2 text-[#00FFC6]">
-  82 |                    {stages[active] && <stages[active].icon className="h-5 w-5" />}
-     |                                              ^
-  83 |                    <span className="text-xs uppercase tracking-wide text-white/70">{stages[active]?.mode}</span>
-  84 |                  </div>
-  
-      at failureErrorWithLog (/home/workspace/node_modules/esbuild/lib/main.js:1472:15)
-      at /home/workspace/node_modules/esbuild/lib/main.js:755:50
-      at responseCallbacks.<computed> (/home/workspace/node_modules/esbuild/lib/main.js:622:9)
-      at handleIncomingPacket (/home/workspace/node_modules/esbuild/lib/main.js:677:12)
-      at Socket.readFromStdout (/home/workspace/node_modules/esbuild/lib/main.js:600:7)
-      at Socket.emit (node:events:508:28)
-      at addChunk (node:internal/streams/readable:559:12)
-      at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
-      at Readable.push (node:internal/streams/readable:390:5)
-      at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
